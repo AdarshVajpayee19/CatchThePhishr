@@ -185,6 +185,8 @@ from sklearn.metrics import (accuracy_score, f1_score, precision_score,
 from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier
 
+from utils import footer
+
 st.markdown(
     """
     <style>
@@ -281,16 +283,36 @@ def show():
     st.write("Supervised machine learning is one of the most commonly used and successful types of machine learning.")
     st.write("Supervised learning is used whenever we want to predict a certain outcome/label from a given set of features, and we have examples of features-label pairs.")
     st.write("The supervised machine learning models (regression) considered to train the dataset in this notebook are:")
-    st.write("- Logistic Regression")
-    st.write("- k-Nearest Neighbors")
-    st.write("- Support Vector Classifier")
-    st.write("- Naive Bayes")
-    st.write("- Decision Tree")
-    st.write("- Random Forest")
-    st.write("- Gradient Boosting")
-    st.write("- Catboost")
-    st.write("- Xgboost")
-    st.write("- Multilayer Perceptrons")
+    # Define model descriptions
+    model_descriptions = {
+        "Logistic Regression": "Logistic regression predicts the output of a categorical dependent variable. Therefore the outcome must be a categorical or discrete value. Logistic Regression is much similar to the Linear Regression except that how they are used. Linear Regression is used for solving Regression problems, whereas Logistic regression is used for solving the classification problems.",
+
+        "k-Nearest Neighbors": "K-Nearest Neighbour is one of the simplest Machine Learning algorithms based on Supervised Learning technique. K-NN algorithm assumes the similarity between the new case/data and available cases and put the new case into the category that is most similar to the available categories.",
+
+        "Support Vector Classifier": " Support Vector Machine or SVM is one of the most popular Supervised Learning algorithms, which is used for Classification as well as Regression problems. The goal of the SVM algorithm is to create the best line or decision boundary that can segregate n-dimensional space into classes so that we can easily put the new data point in the correct category in the future.",
+
+        "Naive Bayes": "Naïve Bayes algorithm is a supervised learning algorithm, which is based on Bayes theorem and used for solving classification problems.It is mainly used in text, image classification that includes a high-dimensional training dataset. Naïve Bayes Classifier is one of the simple and most effective Classification algorithms which helps in building the fast machine learning models that can make quick predictions.",
+
+        "Decision Tree": "Decision Tree is a Supervised learning technique that can be used for both classification and Regression problems, but mostly it is preferred for solving Classification problems. It is a tree-structured classifier, where internal nodes represent the features of a dataset, branches represent the decision rules and each leaf node represents the outcome.",
+
+        "Random Forest": " Random Forest is a popular machine learning algorithm that belongs to the supervised learning technique. It can be used for both Classification and Regression problems in ML. It is based on the concept of ensemble learning, which is a process of combining multiple classifiers to solve a complex problem and to improve the performance of the model.",
+
+        "Gradient Boosting": "Gradient boosting classifiers are a group of machine learning algorithms that combine many weak learning models together to create a strong predictive model. Decision trees are usually used when doing gradient boosting. Boosting algorithms play a crucial role in dealing with bias variance trade-off. Unlike bagging algorithms, which only controls for high variance in a model, boosting controls both the aspects (bias & variance), and is considered to be more effective.",
+
+        "Catboost": "CatBoost is a recently open-sourced machine learning algorithm from Yandex. It can easily integrate with deep learning frameworks like Google’s TensorFlow and Apple’s Core ML. It can work with diverse data types to help solve a wide range of problems that businesses face today.",
+
+        "Xgboost": "XGBoost is an implementation of gradient boosted decision trees designed for speed and performance that is dominative competitive machine learning.",
+
+        "Multilayer Perceptrons": "MLPClassifier stands for Multi-layer Perceptron classifier which in the name itself connects to a Neural Network. Unlike other classification algorithms such as Support Vectors or Naive Bayes Classifier, MLPClassifier relies on an underlying Neural Network to perform the task of classification."
+    }
+
+    # Display model descriptions
+    for model, description in model_descriptions.items():
+        # st.markdown(f"## {model}")
+        # st.write(description)
+        with st.expander(f"## {model}"):
+            st.write(description)
+
 
     # 6. Comparison of Model
 
@@ -346,3 +368,17 @@ def show():
     plt.xlabel("Feature importance")
     plt.ylabel("Feature")
     st.pyplot()
+    
+    st.markdown("## Technologies Used")
+
+    # Display badges
+    st.markdown("![](https://forthebadge.com/images/badges/made-with-python.svg)")
+
+    # Display logos with links
+    st.markdown("[<img target='_blank' src='https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg' width=200>](https://numpy.org/doc/) "
+                "[<img target='_blank' src='https://upload.wikimedia.org/wikipedia/commons/e/ed/Pandas_logo.svg' width=200>](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) "
+                "[<img target='_blank' src='https://upload.wikimedia.org/wikipedia/commons/8/84/Matplotlib_icon.svg' width=100>](https://matplotlib.org/) "
+                "[<img target='_blank' src='https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png' width=200>](https://scikit-learn.org/stable/) ",
+                unsafe_allow_html=True)
+    # # Call the footer function to display the footer
+    footer()

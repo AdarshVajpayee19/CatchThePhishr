@@ -4,11 +4,13 @@ import sqlite3
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
-# import spacy
 import streamlit as st
 from streamlit_option_menu import option_menu
 # import nlp as nlp
 from wordcloud import WordCloud
+
+# import spacy
+from utils import footer
 
 # from wordcloud import WordCloud
 
@@ -312,7 +314,8 @@ def manage_blog():
             st.warning("Incorrect Admin Username or Password")
     else:
         st.warning("Please login as Admin")
-
+    # Call the footer function to display the footer
+    # footer()
 
 
 def show():
@@ -407,6 +410,8 @@ def show():
                             st.write(full_message_temp.format(i[2]), unsafe_allow_html=True)
             else:
                 st.warning("Incorrect Username/Password")
+        # Call the footer function to display the footer
+        # footer()
 
     elif choice == "SignUp":
         st.markdown("<h3 style='color:#4d6cc1'>Create An Account</h3>", unsafe_allow_html=True)
@@ -427,6 +432,8 @@ def show():
                 st.warning("Password not the same")
         else:
             st.warning("Please fill in both password fields")
+        # Call the footer function to display the footer
+        # footer()
 
 
     elif choice == "Admin Login":

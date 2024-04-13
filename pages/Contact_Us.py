@@ -4,6 +4,8 @@ import requests as re
 import streamlit as st
 from bs4 import BeautifulSoup
 
+from utils import footer
+
 st.markdown(
     """
     <style>
@@ -43,8 +45,7 @@ def show():
     local_css("styles/style.css")
 
     st.markdown("<h3 style='color:#4d6cc1'>Connect with Us on Social Media</h3>", unsafe_allow_html=True)
-    st.markdown("<h4 style='color:#4d6cc1'>Follow us on social media for updates, news, and more!</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color:#c8a808'>Follow us on social media for updates, news, and more!</h4>", unsafe_allow_html=True)
 
-    st.write("[Twitter](https://twitter.com/your_twitter_handle) :bird:")
-    st.write("[Facebook](https://facebook.com/your_facebook_page) :facebook:")
-    st.write("[LinkedIn](https://linkedin.com/in/your_linkedin_profile) :linkedin:")
+    # Call the footer function to display the footer
+    footer()

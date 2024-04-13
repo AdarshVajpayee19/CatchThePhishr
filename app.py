@@ -226,7 +226,11 @@ from bs4 import BeautifulSoup
 
 # Import the FeatureExtraction class from feature.py
 from feature import FeatureExtraction
+from menu import streamlit_menu
+from pages import FAQ, Blog, Contact_Us, Project_Description
+from utils import footer
 
+# Set page config
 st.set_page_config(page_title='Phishing Website Detection Using Machine Learning', page_icon='./static/favicon.png')
 # Add the CSS rule using st.markdown
 st.markdown(
@@ -327,8 +331,9 @@ def applicationRun():
     # Add a horizontal line
     st.markdown("<hr>", unsafe_allow_html=True)
 
-from menu import streamlit_menu
-from pages import FAQ, Blog, Contact_Us, Project_Description
+    # Call the footer function to display the footer
+    footer()
+
 
 selected = streamlit_menu()
 
@@ -342,3 +347,4 @@ elif selected == "FAQ":
     FAQ.show()
 elif selected == "Blog":
     Blog.show()
+    footer()

@@ -1,5 +1,7 @@
 import streamlit as st
 
+from utils import footer
+
 st.markdown(
     """
     <style>
@@ -10,6 +12,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 def show():
     # Display the quiz
     st.markdown("<h1 style='color:#c8a808'>Phishing Quiz</h1>", unsafe_allow_html=True)
@@ -75,6 +78,8 @@ def show():
             st.write("* [Stay Safe Online](https://staysafeonline.org/)")
             st.markdown("<hr>", unsafe_allow_html=True)
 
+    # Call the footer function to display the footer
+    footer()
 
 
 
