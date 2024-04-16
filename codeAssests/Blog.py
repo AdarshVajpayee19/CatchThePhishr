@@ -1,9 +1,9 @@
 import hashlib
+import sqlite3
 
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
-import psycopg2
 import streamlit as st
 from streamlit_option_menu import option_menu
 # import nlp as nlp
@@ -12,19 +12,14 @@ from wordcloud import WordCloud
 # import spacy
 from utils import footer
 
+# from wordcloud import WordCloud
 
-# Function to hash the password
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+# import spacy
+# from wordcloud import WordCloud
 
-# Connect to PostgreSQL database
-conn = psycopg2.connect(
-    dbname="phishing_database",
-    user="postgres",
-    password="adarshvajpayee@192001",
-    host="localhost"
-)
-conn.autocommit = True  # Enable autocommit mode
+# import subprocess
+# # Download SpaCy model if not already downloaded
+# subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
 st.markdown(
     """
     <style>
@@ -35,6 +30,9 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+# Function to hash the password
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
 
 matplotlib.use('Agg')
@@ -43,10 +41,24 @@ matplotlib.use('Agg')
 avatar1 = "https://www.w3schools.com/howto/img_avatar1.png"
 avatar2 = "https://www.w3schools.com/howto/img_avatar2.png"
 
+
 def readingTime(mytext):
     total_words = len([token for token in mytext.split(" ")])
     estimatedTime = total_words / 200.0
     return estimatedTime
+
+
+
+# Load English tokenizer, tagger, parser, NER, and word vectors
+# nlp = spacy.load("en_core_web_sm")
+
+
+# def analyze_text(text):
+#     doc = nlp(text)
+#     return doc
+
+
+# Now you can use analyze_text function to perform NLP tasks on your text data
 
 
 # Layout Templates
@@ -88,85 +100,148 @@ full_message_temp = """
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem">{}</div>"""
 
 
-# Functions for database operations
 def create_table():
-    with conn.cursor() as cursor:
-        cursor.execute('CREATE TABLE IF NOT EXISTS blogtable(author TEXT,title TEXT,article TEXT,postdate DATE)')
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS blogtable(author TEXT,title TEXT,article TEXT,postdate DATE)')
+    conn.commit()
+    conn.close()
+
 
 def add_data(author, title, article, postdate):
-    with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO blogtable(author,title,article,postdate) VALUES (%s, %s, %s, %s)',
-                       (author, title, article, postdate))
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO blogtable(author,title,article,postdate) VALUES (?,?,?,?)',
+              (author, title, article, postdate))
+    conn.commit()
+    conn.close()
+
 
 def view_all_notes():
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM blogtable')
-        data = cursor.fetchall()
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM blogtable')
+    data = c.fetchall()
+    conn.close()
     return data
+
 
 def view_all_titles():
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT DISTINCT title FROM blogtable')
-        data = cursor.fetchall()
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('SELECT DISTINCT title FROM blogtable')
+    data = c.fetchall()
+    conn.close()
     return data
 
-def get_blog_by_title(title):
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute('SELECT * FROM blogtable WHERE title=%s', (title,))
-            data = cursor.fetchall()
-        return data
-    except psycopg2.Error as e:
-        print("Error fetching blog by title:", e)
-        return None
 
+def get_blog_by_title(title):
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM blogtable WHERE title="{}"'.format(title))
+    data = c.fetchall()
+    conn.close()
+    return data
 
 
 def get_blog_by_author(author):
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM blogtable WHERE author=%s', (author,))
-        data = cursor.fetchall()
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM blogtable WHERE author="{}"'.format(author))
+    data = c.fetchall()
+    conn.close()
     return data
 
+
 def delete_data(title):
-    with conn.cursor() as cursor:
-        cursor.execute('DELETE FROM blogtable WHERE title=%s', (title,))
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM blogtable WHERE title="{}"'.format(title))
+    conn.commit()
+    conn.close()
+
 
 def create_usertable():
-    with conn.cursor() as cursor:
-        cursor.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT)')
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT)')
+    conn.commit()
+    conn.close()
+
 
 def add_userdata(username, password):
-    with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO userstable(username,password) VALUES (%s,%s)', (username, password))
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO userstable(username,password) VALUES (?,?)', (username, password))
+    conn.commit()
+    conn.close()
 
-def login_user(username, password):
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM userstable WHERE username=%s AND password=%s', (username, password))
-        data = cursor.fetchall()
+
+def login_user(conn, username, password):
+    c = conn.cursor()
+    c.execute('SELECT * FROM userstable WHERE username =? AND password = ?', (username, password))
+    data = c.fetchall()
+    return data
+
+
+def login_user_safe2(conn, username, password):
+    c = conn.cursor()
+    c.execute("SELECT * FROM userstable WHERE username= ? AND password = ?", (username, password))
+    data = c.fetchall()
+    return data
+
+
+def login_user_unsafe(conn, username, password):
+    c = conn.cursor()
+    c.execute("SELECT * FROM userstable WHERE username='{}' AND password = '{}'".format(username, password))
+    data = c.fetchall()
+    return data
+
+
+def login_user_unsafe2(conn, username, password):
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM userstable WHERE username= '{username}' AND password= '{password}'")
+    data = c.fetchall()
+    return data
+
+
+def view_all_users():
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM userstable')
+    data = c.fetchall()
+    conn.close()
     return data
 
 def create_admin_table():
-    with conn.cursor() as cursor:
-        cursor.execute('CREATE TABLE IF NOT EXISTS admin_table (admin_username TEXT, admin_password TEXT)')
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS admin_table (admin_username TEXT, admin_password TEXT)')
+    conn.commit()
+    conn.close()
 
 def insert_admin_credentials():
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM admin_table')
-        data = cursor.fetchall()
-        if not data:  # Check if there are no admin credentials in the database
-            hashed_password = hash_password('adarsh@123')  # Hash the password
-            cursor.execute("INSERT INTO admin_table (admin_username, admin_password) VALUES (%s, %s)", ('adarsh vajpayee', hashed_password))
-            hashed_password = hash_password('prajwal@123')  # Hash the password
-            cursor.execute("INSERT INTO admin_table (admin_username, admin_password) VALUES (%s, %s)", ('prajwal c', hashed_password))
-            print("Admin credentials inserted successfully.")
-        else:
-            print("Admin credentials already exist.")
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM admin_table")
+    data = c.fetchall()
+    if not data:  # Check if there are no admin credentials in the database
+        hashed_password = hash_password('adarsh@123')  # Hash the password
+        c.execute("INSERT INTO admin_table (admin_username, admin_password) VALUES ('adarsh vajpayee', ?)", (hashed_password,))
+        hashed_password = hash_password('prajwal@123')  # Hash the password
+        c.execute("INSERT INTO admin_table (admin_username, admin_password) VALUES ('prajwal c', ?)", (hashed_password,))
+        conn.commit()
+        print("Admin credentials inserted successfully.")
+    else:
+        print("Admin credentials already exist.")
+    conn.close()
 
 def login_admin(username, password):
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM admin_table WHERE admin_username=%s', (username,))
-        data = cursor.fetchone()
+    conn = sqlite3.connect('data.db')
+    c = conn.cursor()
+    try:
+        c.execute('SELECT * FROM admin_table WHERE admin_username=?', (username,))
+        data = c.fetchone()
         if data:
             hashed_password = data[1]
             if hashed_password == hash_password(password):
@@ -174,19 +249,18 @@ def login_admin(username, password):
                 return True
         print("Admin login failed. Invalid username or password.")
         return False
+    except Exception as e:
+        print(f"An error occurred while trying to log in as admin: {e}")
+        return False
+    finally:
+        conn.close()
+
 
 # Call the function to create the admin table and insert admin credentials
 create_admin_table()
 insert_admin_credentials()
 
-create_usertable()
 
-def view_all_users():
-    with conn.cursor() as cursor:
-        cursor.execute('SELECT * FROM userstable')
-        data = cursor.fetchall()
-    conn.close()
-    return data
 
 # Functions for managing the blog
 def manage_blog():
@@ -271,8 +345,10 @@ def show():
         username = st.sidebar.text_input("Username")
         password = st.sidebar.text_input("Password",type='password')
         if st.sidebar.checkbox("Login"):
+            conn = sqlite3.connect('data.db')
             hashed_password = hash_password(password)  # Hash the input password
-            result = login_user(username, hashed_password)  # Compare with hashed password in the database
+            result = login_user(conn, username, hashed_password)  # Compare with hashed password in the database
+            conn.close()
             if result:
                 st.success("Logged In as {}".format(username))
                 html_temp = """

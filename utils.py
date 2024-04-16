@@ -6,7 +6,7 @@ def footer():
     st.markdown("""
     <style>
     footer{
-        background-color: #111;
+        background-color: #e4dd86;
     }
     .footerContainer{
         width: 100%;
@@ -46,7 +46,7 @@ def footer():
         list-style-type: none;
     }
     .footerNav ul li a{
-        color:white;
+        color:black;
         margin: 3px;
         text-decoration: none;
         font-size: 1.3em;

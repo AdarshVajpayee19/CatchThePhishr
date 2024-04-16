@@ -79,7 +79,7 @@ def show():
             st.markdown("<hr>", unsafe_allow_html=True)
 
     # Call the footer function to display the footer
-    footer()
+    # footer()
 
 
 

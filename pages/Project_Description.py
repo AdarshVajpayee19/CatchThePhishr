@@ -369,6 +369,31 @@ def show():
     plt.ylabel("Feature")
     st.pyplot()
     
+    st.markdown("<h3 style='color:#4d6cc1'>10. Ensembling all the 10 Models into 1 Single model.</h3>", unsafe_allow_html=True)
+    # Step 1: Importing Libraries
+    st.markdown("<h5 style='color:#4d6cc1'> <b>Step 1:</b> Importing Libraries</h5>", unsafe_allow_html=True)
+    st.write("In this step, we import the necessary libraries for data manipulation, visualization, and machine learning algorithms.")
+
+    # Step 2: Loading Data
+    st.markdown("<h5 style='color:#4d6cc1'> <b>Step 2:</b> Loading Data</h5>", unsafe_allow_html=True)
+    st.write("Load your dataset into a pandas DataFrame using `pd.read_csv()`. Drop the index column if it's not necessary.")
+
+    # Step 3: Splitting Data
+    st.markdown("<h5 style='color:#4d6cc1'> <b>Step 3:</b> Splitting Data</h5>", unsafe_allow_html=True)
+    st.write("Split the dataset into independent features (X) and the target variable (y). Then, further split the data into training and testing sets using `train_test_split()` from scikit-learn.")
+
+    # Step 4: Model Training
+    st.markdown("<h5 style='color:#4d6cc1'> <b>Step 4:</b> Model Training</h5>", unsafe_allow_html=True)
+    st.write("Train several classifiers on the training data. These classifiers include Logistic Regression, K-Nearest Neighbors, Support Vector Classifier, Naive Bayes, Decision Tree, Random Forest, Gradient Boosting, CatBoost, XGBoost, and Multi-layer Perceptron Classifier.")
+
+    # Step 5: Ensemble Model
+    st.markdown("<h5 style='color:#4d6cc1'> <b>Step 5:</b> Ensemble Model</h5>", unsafe_allow_html=True)
+    st.write("Create an ensemble model by combining the individual models. The ensemble model predicts the final class label by taking a majority vote from the predictions of each individual model.")
+
+    # Step 6: Saving the Model
+    st.markdown("<h5 style='color:#4d6cc1'> <b>Step 6:</b> Saving the Model</h5>", unsafe_allow_html=True)
+    st.write("Finally, save the ensemble model into a file using the `pickle` library. This file can be later loaded and used for making predictions.")
+
     st.markdown("## Technologies Used")
 
     # Display badges
@@ -381,4 +406,4 @@ def show():
                 "[<img target='_blank' src='https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png' width=200>](https://scikit-learn.org/stable/) ",
                 unsafe_allow_html=True)
     # # Call the footer function to display the footer
-    footer()
+    # footer()
